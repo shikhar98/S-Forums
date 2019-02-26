@@ -1,0 +1,22 @@
+body,html{
+	width: 100%;
+	height: 100%;
+	margin: 0;	
+	/*background: silver;*/
+}
+.sidebar{
+	float:left;
+	width: 20%;
+	background: grey;
+	height: 100%;
+}
+.home{
+	float: right;
+	width: 80%;
+	background: silver;
+	height: 100%;
+}
+.leftfram{
+	width: 100%;
+	height: 100%;
+}
