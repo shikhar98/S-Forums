@@ -7,30 +7,44 @@
 	<!-- <meta charset="utf-8" http-equiv="refresh" content="10"> -->
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<title></title>
-</head>
+</head>   
 <body>
- <nav class="navbar navbar-inverse">
+ <nav id="idnavbar" class="navbar navbar-inverse">
+  <!-- navbar-fixed-top -->
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">S Forums</a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
+      <li id="idnavbar class="active"><a href="#">Home</a></li>
       <li><a href="#">Answer</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
+      <li>
+        <form class="searchform" action="search" method="get">
+          <input type="text" name="search" placeholder="Search" size="60%">
+          <input type="submit">   
+        </form>
+      </li>
       <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
       <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
     </ul>
   </div>	
 </nav> 
 <div class="sidebar">
-	
-	<a href="www.google.com" target="myframe">styling</a><br>
+      <h1><u>Categories</u></h1><br> 
+      <% 
+      for(var i=0;i<categories.length;i++){
+      %>
+     <a class="sidelinks" href="#" target="myframe"><%= categories[i] %></a><br>
+     <%
+      }
+     %>
 </div>
 
-<div class="home"><iframe class="leftfram" name="myframe"></iframe>
-	<aside></aside>
+<div class="home">
+    <iframe src="views/home.ejs" class="leftfram" name="myframe"></iframe>
+	<aside></aside>  
 </div>
 </body>
 </html>
