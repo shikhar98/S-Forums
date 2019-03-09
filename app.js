@@ -44,6 +44,6 @@ app.get("/views/home.ejs" ,function(req,res) {
 // 		console.log(cate);
 // 	}
 // });
-app.listen(3000,function(req,res){
+app.listen(process.env.port,function(req,res){
 	console.log("connected");
 });
