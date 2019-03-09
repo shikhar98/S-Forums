@@ -1,13 +1,13 @@
 body,html{
 	height: 100%:
 	width: 100%;
-	/*background: orange;*/
 }
 .postbox{
-	height: 120px;
+	height: 100px;
 }
 .submitbutton{
-	margin-right: 23%;
+	padding-top: 10px;
+	margin-right: 46%;
 	float: right;
 	/*height: 20px;*/
 	/*width: 0px;*/
