@@ -14,7 +14,6 @@ categories.find(function(err,category){
 	}
 	else{
 		for(var i=0;i<category.length;i++){
-			console.log(category[i]["category"]);
 			listOfCategory.push(category[i]["category"]);
 		}
 	}
@@ -23,6 +22,9 @@ categories.find(function(err,category){
 app.use(express.static("public"));	
 app.get("/" ,function(req,res) { 	
 	res.render("forums",{categories:listOfCategory});
+});
+app.get("/views/home.ejs" ,function(req,res) { 	
+	res.render("home.ejs");
 });
 // var categorie=new categories({
 // 	category : "Technology"
@@ -42,6 +44,6 @@ app.get("/" ,function(req,res) {
 // 		console.log(cate);
 // 	}
 // });
-app.listen(8080,function(req,res){
+app.listen(3000,function(req,res){
 	console.log("connected");
 });
