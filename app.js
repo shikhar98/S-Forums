@@ -18,13 +18,15 @@ categories.find(function(err,category){
 		}
 	}
 });
-
 app.use(express.static("public"));	
 app.get("/" ,function(req,res) { 	
 	res.render("forums",{categories:listOfCategory});
 });
 app.get("/views/home.ejs" ,function(req,res) { 	
-	res.render("home.ejs");
+	res.render("home.ejs",{categories:listOfCategory});
+});
+app.post("/postquestion",function(req,res){
+
 });
 // var categorie=new categories({
 // 	category : "Technology"
@@ -44,6 +46,6 @@ app.get("/views/home.ejs" ,function(req,res) {
 // 		console.log(cate);
 // 	}
 // });
-app.listen(process.env.port,function(req,res){
+app.listen(process.env.PORT, process.env.IP,function(req,res){
 	console.log("connected");
 });

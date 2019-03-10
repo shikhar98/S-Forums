@@ -2,17 +2,53 @@
 <html>
 <head>
 	<title></title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 	<link rel="stylesheet" type="text/css" href="/homestyle.css">
 	<style type="text/css">
-		/*html,body{*/
-			/*background: orange;*/
+	/*html,body{*/
+		/*background: orange;*/
 		/*}*/
 	</style> 
 </head>
 <body>
-	<form action="post" method="post">
-		<input class="postbox" type="text" name="post" placeholder="Ask Question" size="80"><br>
-		<div class="submitbutton"><input type="submit" value="Post"></div>	
+	<div class="homecontainer">
+		<h1><strong>Wanna Ask Something</strong></h1>
+		<form action="/postquestion" method="post">
+			<div class="form-group">
+				<input class="postbox" type="text" name="post" placeholder="Ask Question" size="80"><br>
+			</div>
+			<div class="form-group">
+				Select Your Category: 
+				<select onchange="yesnoCheck(this);" name="specifieddcategory">
+					<% 
+					for(var i=0;i<categories.length;i++){
+					%>
+					<option value= <%= categories[i] %>><%= categories[i] %></option>
+					<%
+				}
+				%>
+				<option value="other" onselect="specifycategory()">Other</option>
+				
+			</select>
+		</div>
+		<div class="form-group">
+			<span style="display: none;" id="ifYes">Specify Your Category:<input type="text" name="specifieddcategory"></span> 
+		</div>
+		<div class="form-group">
+			<div class="submitbutton"><input type="submit" value="Post"></div>	
+		</div>
 	</form>
+</div>
+<script type="text/javascript">
+	function yesnoCheck(that) {
+		if (that.value == "other") {
+			document.getElementById("ifYes").style.display = "block";
+		} else {
+			document.getElementById("ifYes").style.display = "none";
+		}
+	}
+</script>
+<script src="homescript.js"></script>
 </body>
 </html>
