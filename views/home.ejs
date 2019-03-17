@@ -20,7 +20,7 @@
 			</div>
 			<div class="form-group">
 				Select Your Category: 
-				<select onchange="yesnoCheck(this);" name="specifieddcategory">
+				<select onchange="yesnoCheck(this);" name="specifiedcategory">
 					<% 
 					for(var i=0;i<categories.length;i++){
 					%>
@@ -33,7 +33,7 @@
 			</select>
 		</div>
 		<div class="form-group">
-			<span style="display: none;" id="ifYes">Specify Your Category:<input type="text" name="specifieddcategory"></span> 
+			<span style="display: none;" id="ifYes">Specify Your Category:<input type="text" name="othercategory"></span> 
 		</div>
 		<div class="form-group">
 			<div class="submitbutton"><input type="submit" value="Post"></div>	
