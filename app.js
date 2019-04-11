@@ -5,7 +5,12 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 var dbo
+var posttitle="Some Of the latest Questions";
 var listOfCategory=[];
+var listOfPosts=[];
+var categoryOfPost=[];
+var lastPostId;
+var answrs=[];
 var MongoClient = require('mongodb').MongoClient;
 var uri = "mongodb+srv://admin:admin@sforums-zq5nz.mongodb.net/test?retryWrites=true";
 MongoClient.prototype.insert = function(ns, ops, options, callback) {
@@ -35,40 +40,126 @@ client.connect(function(err, db){
 	dbo.createCollection("posts", function(err, res) {
 		if(err) throw (err);
 		console.log("Collection posts created!");
-	});
+	});posttitle
 	dbo.collection("categories").find({}).toArray(function(err, result) {
 		if(err) throw (err);		
-		for (var i = 0; i < result.length; i++) {
+		for (let i = 0; i < result.length; i++) {
 			listOfCategory.push(result[i].category);
 		}
 	});
+	dbo.collection("posts").find({}).toArray(function(err, result) {
+		if(err) throw (err);		
+		for (let i = 0; i < result.length; i++) {
+			listOfPosts.push(result[i].post);
+			categoryOfPost.push(result[i].category);
+		}
+	});
+	dbo.collection("variables").find({}).toArray(function(err,result){
+		if(err) throw err;
+		lastPostId=result[0].lastpostid;
+		// console.log(lastPostId);
+	})
 });	
 app.get("/" ,function(req,res) { 	
 	res.render("forums",{categories:listOfCategory});
 });
-app.get("/views/home.ejs" ,function(req,res) { 	
-	res.render("home.ejs",{categories:listOfCategory});
+app.get("/views/home/:categoryname" ,function(req,res) {
+	lastTenPosts=[];
+	lastTenId=[];
+	lastTenCategory=[];
+	posttitle="Some Of the latest Questions";	
+	if(req.params.categoryname==="homepage"){
+		// console.log(result);
+		lastTenPosts=[];
+		lastTenId=[];
+		lastTenCategory=[];
+		dbo.collection("posts").find({}).sort({_id:-1}).limit(10).toArray(function(err, result) {
+			for(let i=0;i<result.length;i++){
+				lastTenId.push(result[i].id);
+				lastTenPosts.push(result[i].post);
+				lastTenCategory.push(result[i].category);			
+			}
+			res.render("home",{ids:lastTenId,categories:listOfCategory,posts:lastTenPosts,categoryofposts:lastTenCategory,titleofposts:posttitle});
+		});
+	}
+	else{
+		posttitle=req.params.categoryname;
+		lastTenPosts=[];
+		lastTenId=[];
+		lastTenCategory=[];
+		dbo.collection("posts").find({category:posttitle}).toArray(function(err, result) {
+			for(var i=0;i<result.length;i++){
+				lastTenId.push(result[i].id);
+				lastTenCategory.push(result[i].category);
+				lastTenPosts.push(result[i].post);										
+			}
+			res.render("home",{ids:lastTenId,categories:listOfCategory,posts:lastTenPosts,categoryofposts:lastTenCategory,titleofposts:posttitle});
+		});	
+	}
+
 });
 app.post("/postquestion",function(req,res){
 	var question=req.body.post;
-	console.log(req.body.specifiedcategory)
-	var specifiedcategory
+	var specifiedcategory;
 	if(req.body.specifiedcategory!="other"){
 		specifiedcategory=req.body.specifiedcategory;
 	}
 	else{
 		specifiedcategory=req.body.othercategory;
 	}
-	console.log(question,specifiedcategory);
-	var myobj = { post: question, category: specifiedcategory };
+	lastPostId++;
+	var myobj = { id:lastPostId ,post: question, category: specifiedcategory,};
 	dbo.collection("posts").insertOne(myobj, function(err, res) {
 		if(err) throw (err);	
 		console.log("1 document inserted");
 	});
-	res.write("Your question has been posted");
-	res.redirect("/views/home.ejs");
+	var myquery = { lastpostid: lastPostId-1 };
+	var newvalues = { $set: {lastpostid:lastPostId} };
+	dbo.collection("variables").updateOne(myquery, newvalues, function(err, res) {
+		if (err) throw err;
+		console.log("1 document updated");
+	});
+	if(req.body.specifiedcategory=="other"){
+		dbo.collection("categories").insertOne({category:specifiedcategory}, function(err, res) {
+			if(err) throw (err);	
+			console.log("1 document inserted");
+		});
+	}
+	// ("your question has been posted");	
+	res.redirect("/views/home/homepage")
+	// res.send(app.render("home"));
 });
-app.listen(process.env.PORT || 3000,function(req,res){
+app.get("/views/answer/:id",function(req,res){
+	answrs=[];
+	var postId = parseInt(req.params.id);
+	// console.log(typeof postId+postId);
+	// console.log("hello");
+	dbo.collection("posts").find({id:postId}).toArray(function(err, result) {
+		var postQuestion=result[0].post;
+		// res.send("hello");
+		// res.render("home1");			
+		console.log(postId);
+		answrs=[];
+		dbo.collection("answers").find({id:postId}).toArray(function(err, result1) {
+			for(var i=0;i<result1.length;i++){
+				answrs.push(result1[i].answer);
+			}
+			console.log(answrs);
+			res.render("answer",{id:postId,question:postQuestion,answers:answrs});			
+		});
+	});	
+});
+app.post("/postanswer",function(req,res){
+	var postId=parseInt(req.params.id);
+	var ans=req.body.answer;
+	dbo.collection("answers").insertOne({id:postId,answer:ans},function(err,res){
+		if(err) throw err;
+		console.log("1 document inserted")
+	})
+	// window.alert("your answer has been posted");
+	res.redirect("/views/answer/"+postId);
+	// res.send("ITna ho gaya");
+});
+app.listen(process.env.PORT || 5000,function(req,res){
 	console.log("Connected");
 });
-client.close()

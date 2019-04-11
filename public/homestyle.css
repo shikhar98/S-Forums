@@ -1,10 +1,27 @@
 body,html{
 	height: 100%:
 	width: 100%;
-	background: #d9d9d9;
+	background: #E8E8E8;
 }
 .postbox{
 	height: 100px;
+	width: 80%;
+}
+.posts{
+	margin-left: 5%;
+	width: 68%;
+}
+.spost{
+	font-size: 20px;
+}
+.ansbtn{
+	margin-left: 80%; 
+	font-size: 100%;
+	/*width: 25%;*/
+}
+.answerbutton{
+	padding:10px;
+	margin-left:8%;
 }
 .submitbutton{
 	padding-top: 10px;
@@ -15,4 +32,20 @@ body,html{
 }
 .homecontainer{
 	margin-left: 10px;
+}
+h2{
+	padding: 2%;
+	color: #003366;
+	
+}
+h1{
+	color: #003366;
+}
+hr{
+	border: 1px solid #003333;
+	padding: 0;
+	margin: 0;
+}
+.container{
+	background: white;
 }
