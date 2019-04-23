@@ -8,7 +8,7 @@
 <body>
 	<br>
 	<div class="container">
-		<form action="/postanswer" method="post">
+		<form action="/postanswer" method="post" name="answerform" onsubmit="return validate()">
 			<div class="block">
 				<input type="hidden" name="id" value="<%= id %>">
 				<div class="form-group">
@@ -29,5 +29,13 @@
 		</div>
 		<% } %>
 	</div>
+	<script type="text/javascript">
+		function validate(){
+			if(answerform.answer.value==""){
+				alert("All fields are not filled");
+				return false;
+			}
+		}
+	</script>
 </body>
 </html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="/resulthomestyle.css">
+	<title></title>
+</head>
+<body>
+	<% 
+	if(results[0]==undefined){
+	results.push({id:"Nan",post:"Nan"});
+	console.log(results)
+	results[0].post="Nothing Found related to your question"
+} 
+%>
+<h1><strong>Result Page</strong></h1>
+<% results.forEach(function(element){ %>
+<div class="container">
+	<% var idparam="/views/answer/"+element.id%>
+	<a href="<%=idparam%>"><span>Q. <%= element.post %></span></a>
+</div>
+
+<% }); %>
+</body>
+</html>

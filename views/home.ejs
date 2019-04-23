@@ -9,7 +9,7 @@
 <body>
 	<div class="homecontainer">
 		<h1><strong>Wanna Ask Something</strong></h1>
-		<form action="/postquestion" method="post">
+		<form name="postform" action="/postquestion" method="post" onsubmit="return validate()">
 			<div class="form-group">
 				<input class="postbox" type="text" name="post" placeholder="Ask Question" size=80%><br>
 			</div>
@@ -72,6 +72,23 @@ for(var i=0;i<posts.length;i++){
 	}
 	function answerbutton(id){
 		window.location.href ="/views/answer/"+id;
+	}
+	function validate(){
+		if(postform.post.value==""){
+			alert("All field are not filled");
+			return false;				
+		}
+		else{
+			if(document.getElementById("ifYes").style.display==="block"){
+				if(postform.othercategory.value==""){
+					alert("All fields are not filled");
+					return false;
+				}
+			}
+			else{
+				return true;
+			}
+		}
 	}
 </script>
 </body>

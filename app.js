@@ -11,6 +11,7 @@ var listOfPosts=[];
 var categoryOfPost=[];
 var lastPostId;
 var answrs=[];
+var searchResults=[];
 var MongoClient = require('mongodb').MongoClient;
 var uri = "mongodb+srv://admin:admin@sforums-zq5nz.mongodb.net/test?retryWrites=true";
 MongoClient.prototype.insert = function(ns, ops, options, callback) {
@@ -58,10 +59,37 @@ client.connect(function(err, db){
 		if(err) throw err;
 		lastPostId=result[0].lastpostid;
 		// console.log(lastPostId);
-	})
+	})	
 });	
 app.get("/" ,function(req,res) { 	
 	res.render("forums",{categories:listOfCategory});
+});
+app.post("/searchquestion",function(req,res){
+	var searchQuery=req.body.search;
+	var searchQuery=searchQuery.toLowerCase();
+	var searchKeys=searchQuery.split(" ");
+	var rejectedWords=["how","why","do","you","have","has","i","what","not","if","in","out","he","she","does","is","was","it","had","were","him","her","they","them","there","their","those","whose"];
+	searchResults=[];
+	console.log(searchQuery);
+	dbo.collection("posts").find({}).toArray(function(err,result){
+		if(err) throw err;
+		for(var i=0;i<result.length;i++){
+			for(var j=0;j<searchKeys.length;j++){
+				console.log("outside")
+				if(rejectedWords.indexOf(searchKeys[j])==-1){
+					console.log("first if");
+					if(result[i].post.search(searchKeys[j])!=-1){
+						console.log(result[i].post.indexOf(searchKeys[j]));
+						console.log("second if");			
+						searchResults.push(result[i]);
+						break;
+					}
+				}
+			}
+		}
+		console.log(searchResults);
+		res.render("result",{results:searchResults,categories:listOfCategory});
+	});
 });
 app.get("/views/home/:categoryname" ,function(req,res) {
 	lastTenPosts=[];
@@ -81,6 +109,10 @@ app.get("/views/home/:categoryname" ,function(req,res) {
 			}
 			res.render("home",{ids:lastTenId,categories:listOfCategory,posts:lastTenPosts,categoryofposts:lastTenCategory,titleofposts:posttitle});
 		});
+	}
+	else if(req.params.categoryname==="results"){
+		// console.log(result);
+		res.render("resulthome",{results:searchResults});
 	}
 	else{
 		posttitle=req.params.categoryname;
@@ -138,19 +170,19 @@ app.get("/views/answer/:id",function(req,res){
 		var postQuestion=result[0].post;
 		// res.send("hello");
 		// res.render("home1");			
-		console.log(postId);
+		// console.log(postId);
 		answrs=[];
 		dbo.collection("answers").find({id:postId}).toArray(function(err, result1) {
 			for(var i=0;i<result1.length;i++){
 				answrs.push(result1[i].answer);
 			}
-			console.log(answrs);
+			// console.log(answrs);
 			res.render("answer",{id:postId,question:postQuestion,answers:answrs});			
 		});
 	});	
 });
 app.post("/postanswer",function(req,res){
-	var postId=parseInt(req.params.id);
+	var postId=parseInt(req.body.id);
 	var ans=req.body.answer;
 	dbo.collection("answers").insertOne({id:postId,answer:ans},function(err,res){
 		if(err) throw err;
