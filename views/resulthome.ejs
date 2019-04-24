@@ -11,15 +11,25 @@
 	results.push({id:"Nan",post:"Nan"});
 	console.log(results)
 	results[0].post="Nothing Found related to your question"
-} 
-%>
-<h1><strong>Result Page</strong></h1>
-<% results.forEach(function(element){ %>
-<div class="container">
-	<% var idparam="/views/answer/"+element.id%>
-	<a href="<%=idparam%>"><span>Q. <%= element.post %></span></a>
-</div>
+	%>
+	<script type="text/javascript"> remove();</script>
+	<%}%> 	
+	%>
+	<h1><strong>Result Page</strong></h1>
+	<% results.forEach(function(element){ %>
+	<div class="container">
+		<% var idparam="/views/answer/"+element.id%>
+		<span class="found" style="display: block"><a href="<%=idparam%>">Q. <%= element.post %></a></span>
+		<span class="notfound" style="display: none;"><%= element.post %></span>
+	</div>
 
-<% }); %>
+	<% }); %>
+	<script type="text/javascript">
+		function remove(){
+			console.log("sds");
+			document.getElementsByClassName("notfound").style.display="block";
+			document.getElementsByClassName("found").style.display="none";
+		}
+	</script>
 </body>
 </html>
