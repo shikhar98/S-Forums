@@ -71,6 +71,7 @@ app.post("/searchquestion",function(req,res){
 	var rejectedWords=["how","why","do","you","have","has","i","what","not","if","in","out","he","she","does","is","was","it","had","were","him","her","they","them","there","their","those","whose"];
 	searchResults=[];
 	console.log(searchQuery);
+	console.log(searchKeys);
 	dbo.collection("posts").find({}).toArray(function(err,result){
 		if(err) throw err;
 		for(var i=0;i<result.length;i++){
@@ -78,8 +79,11 @@ app.post("/searchquestion",function(req,res){
 				console.log("outside")
 				if(rejectedWords.indexOf(searchKeys[j])==-1){
 					console.log("first if");
-					if(result[i].post.search(searchKeys[j])!=-1){
-						console.log(result[i].post.indexOf(searchKeys[j]));
+					console.log(result[i]);
+					console.log(searchKeys[j]);
+					var result12=result[i].post.toLowerCase();	
+					if(result12.search(searchKeys[j])!=-1){
+						console.log(result12.indexOf(searchKeys[j]));
 						console.log("second if");			
 						searchResults.push(result[i]);
 						break;
